@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="questionApp">
+<head>
+    <title>Update Questions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+    <link href="/css/main.css" rel="stylesheet">
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <style>
+        /* Hide Angular JS elements before initializing */
+        .ng-cloak {
+            display: none;
+        }
+    </style>
+</head>
+<body ng-controller="QuestionController">
+    <div class="container">
+        {% raw %}
+            {% endraw %}
+
+           
+
+        <!-- Select row for examiner, subject exam -->
+        <div class="row">
+            <div class="col-md-3 control-group">
+                <label class="control-label" for="selectExaminer">Examiner</label>
+                <div class="controls">
+                    <select ng-model="selected_examiner" ng-options="examiner.name for examiner in examiners" class="form-control" id="selectExaminer">
+                        <option value="">Choose Examiner </option>
+                    </select>
+
+                </div>
+            </div>
+            <div class="col-md-3 control-group">
+                <label class="control-label" for="selectSubject">Subject</label>
+                <div class="controls">
+                    <select class="form-control" id="selectSubject" ng-model="selected_subject" ng-options="subject.name for subject in subjects">
+                        <option value="">Choose Subject</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 control-group" ng-show="exams">
+                <label class="control-label" for="selectExam">Exam</label>
+                <div class="controls">
+                    <select class="form-control" id="selectExam" ng-model="selected_exam" ng-options="exam.name for exam in exams|objectiveFilter:examType">
+                        <option value="">Select Exam</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-2 control-group" ng-show="exams">
+                <label class="control-label" for="selectType">Filter Exam</label>
+                <div class="controls form-inline" id="selectType">
+                    <input type="radio" ng-model="examType" value="">  All <br/>
+                    <input type="radio" ng-model="examType" value="true"> Objective <br/>
+                    <input type="radio" ng-model="examType" value="false"> Essay <br/>
+                </div>
+            </div>
+            <div class="col-md-2 pull-right">
+                {% raw %}
+                <ul class="link-group">
+                    <li class="list-group-item"> <a href="/admin" target="_blank">Admin Home</a> </li>
+                    <li class="list-group-item" ng-show="selected_exam"> <a href="/admin/edit/exam/{{selected_exam.id}}" target="_blank">Edit Exam</a> </li>
+                </ul>
+                {% endraw %}
+            </div>
+        </div>
+        <!-- End Select row for examiner, subject exam -->
+
+        <!-- Second row -->
+
+        <div class="row top-buffer" ng-show="selected_exam">
+
+            <div class="control-group">
+                <label>Question Number</label>
+                <div class="controls" id="selectNumber">
+                    <div class="col-md-2">
+                        <select class="form-control" ng-model="selected_question" ng-options="question.number for question in questions" ng-disabled="!questions">
+                            <option value="">Select Number</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input class="form-control" ng-model="new_number" placeholder="Enter number">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary btn btn-block" id="addButton" ng-click="addOrDisplay()">Add/Load</button>
+                    </div>
+
+                </div>
+            </div>
+            {% raw %}
+               
+            <div ng-show="selected_question">
+                <div class="col-md-2" ng-show="selected_question.entityKey">ID: {{selected_question.id}} <a href="/admin/edit/question/images/{{selected_question.entityKey}}" target="_blank">Upload Images etc </a></div>
+                <div class="col-md-2 text-warning" ng-show="!selected_question.entityKey">Never Uploaded</div>
+            </div>
+            {% endraw %}
+
+               
+
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary btn-lg btn-block" id="updateButton" ng-show="selected_question" ng-click="updateQuestion()">Update</button></div>
+            <div class="col-md-2 hidden" id="progressBar">Loading</div>
+        </div>
+
+        <!-- End Second row -->
+
+        <!-- Begin displaying selected question -->
+        <div ng-show="selected_question">
+            <div class="row top-buffer">
+                <div class="control-group col-md-6">
+                    <label class="control-label" for="questionText">Question</label>
+                    <div class="controls">
+                        <textarea class="form-control" rows="3" id="questionText" ng-model="selected_question.text">
+			              	
+			              </textarea>
+                    </div>
+                </div>
+                <div class="control-group col-md-6">
+                    <label class="control-label" for="answerText">Answer</label>
+                    <div class="controls">
+                        <textarea class="form-control" rows="3" id="answerText" ng-model="selected_question.answer.text"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Options -->
+            <div class="row" ng-show="selected_exam.objective">
+                <div clas="col-md-12">
+                    <p class="text-left"><strong>Choices</strong></p>
+                </div>
+            </div>
+            <div id="Options" ng-show="selected_exam.objective">
+                <div ng-repeat="n in [] | range:selected_exam.no_choices">
+                    <div ng-class-odd="row">
+                        <div class="col-md-6 top-buffer">
+                            <textarea class="form-control" rows="2" ng-model="((selected_question.choices)[$index]).text"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- End Options -->
+            <div class="clearfix visible-xs"></div>
+            <div class="row">
+                <div class="col-md-2 control-group" ng-show="selected_exam.objective">
+                    <label class="control-label" for="selectOption">Right Option</label>
+                    <div class="controls">
+                        <input ng-model="selected_question.right_choice" class="form-control" id="selectOption">
+                    </div>
+                </div>
+                <div class="col-md-8 control-group">
+                    {% raw %}
+		            
+                    <label class="control-label" for="tagList">Tags</label>
+                    <div class="controls">
+                        <ul class="list-inline form-control" id="tagList">
+                            <li ng-repeat="tag in selected_question.tags">{{tag}}
+		            	          [<a href ng-click="(selected_question.tags).splice($index, 1)">X</a>]
+		            	        </li>
+                            <li>
+                                <input ng-model="new_tag" class="text" placeholder="New tag">
+                                [<a href ng-click="appendTags()">add</a>]
+		            	        </li>
+                        </ul>
+                    </div>
+                    {% endraw %}
+		           
+                </div>
+            </div>
+            <div class="clearfix visible-xs"></div> 
+
+        </div>
+        <!-- End display question -->
+
+        <!-- Begin latex -->
+        {% raw %}
+          
+        <h6 class="top-buffer">Enter Latex for Preview</h6>
+        <div class="row">
+            <div class="col-md-7">
+                <textarea id="MathInput" onkeyup="Preview.Update()" class="form-control" rows="4">Examples are \( \int_{\infty}^{-\infty}x^2 dx \) and $$\sum_{n=-\infty}^{\infty}x^2$$
+                Type to display 
+                </textarea>
+            </div>
+            <div class="col-md-5">
+                <div id="MathPreview"></div>
+                <div id="MathBuffer"></div>
+            </div>
+        </div>
+
+        {% endraw %}
+
+
+       
+    </div>
+
+
+    <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="/js/lib/bootstrap/bootstrap.js"></script>
+    <script src="/js/lib/angular/angular.js"></script>
+    <script src="/js/admin/add_question.js"></script>
+    <script>
+        Preview.Init();
+		</script>
+
+</body>
+</html>

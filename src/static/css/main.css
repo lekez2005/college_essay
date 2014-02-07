@@ -1,0 +1,19 @@
+.top-buffer { margin-top:15px; }
+
+.fileupload .uneditable-input {
+  display: inline-block;
+  margin-bottom: 0px;
+  vertical-align: middle;
+  cursor: text;
+  overflow: hidden;                 /*Added this line*/
+  max-height: 34px;                 /*Added this line*/
+}
+.fileupload .fileupload-preview {   /*Added this line*/
+  line-height: 21px;                /*Added this line*/
+}                                   /*Added this line*/
+
+.fileupload-new .input-group .btn-file {
+  -webkit-border-radius: 0 3px 3px 0 !important;
+  -moz-border-radius: 0 3px 3px 0 !important;
+  border-radius: 0 3px 3px 0 !important;
+}

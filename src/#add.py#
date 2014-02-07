@@ -1,0 +1,166 @@
+'''
+Created on Aug 10, 2013
+
+@author: Ola
+'''
+import webapp2, jinja2, os
+import getResource, json, logging
+from time import mktime
+from google.appengine.ext import db
+from models.Models import *
+import datetime
+import ast
+import time
+
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__) + "/assets/templates"),
+    extensions=['jinja2.ext.autoescape'])
+
+
+class Add(webapp2.RequestHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('questionupdate.html')
+        self.response.write(template.render())
+class Update(webapp2.RequestHandler):
+    def get(self):
+        response = {}
+        query_type = self.request.get('query')
+        #selections = json.loads(self.request.get('selections'))
+        allexamstypes = getResource.getAllTypes()
+        if query_type == 'initialize': 
+            examtypeId = allexamstypes[allexamstypes.keys()[0]]['Id'] #Select the first examtype in list
+            try:
+                examtypesubjects = getResource.getAllExamSubjects(examtypeId)
+            except:
+                examtypesubjects = None
+            try:
+                subjectId = examtypesubjects[examtypesubjects.keys()[0]]['Id'] #Pick the first subject
+            except:
+                subjectId = None
+            try:
+                exams = getResource.getAllExams(subjectId)
+                examId = exams[exams.keys()[0]]['Id'] #Pick the first exam on the list
+            except:
+                exams = None
+                examId = None
+            try:
+                questions = getResource.getAllQuestions(examId)
+            except:
+                questions = None
+        elif query_type == 'exam_type':
+            examtypeId = long(self.request.get('examtypeId'))
+            try:
+                examtypesubjects = getResource.getAllExamSubjects(examtypeId)
+            except:
+                examtypesubjects = None
+            try:
+                subjectId = examtypesubjects[examtypesubjects.keys()[0]]['Id'] #Pick the first subject
+            except:
+                subjectId = None
+            try:
+                exams = getResource.getAllExams(subjectId)
+                examId = exams[exams.keys()[0]]['Id'] #Pick the first exam on the list
+            except:
+                exams = None
+                examId = None
+            try:
+                questions = getResource.getAllQuestions(examId)
+            except:
+                questions = None
+        elif query_type == 'subject':
+            examtypeId = long(self.request.get('examtypeId'))
+            subjectId = long(self.request.get('subjectId'))
+            try:
+                examtypesubjects = getResource.getAllExamSubjects(examtypeId)
+            except:
+                examtypesubjects = None
+            try:
+                exams = getResource.getAllExams(subjectId)
+                examId = exams[exams.keys()[0]]['Id'] #Pick the first exam on the list
+            except:
+                exams = None
+                examId = None
+            try:
+                questions = getResource.getAllQuestions(examId)
+            except:
+                questions = None
+        elif query_type == 'exam':
+            examtypeId = long(self.request.get('examtypeId'))
+            subjectId = long(self.request.get('subjectId'))
+            examId = long(self.request.get('examId'))
+            try:
+                examtypesubjects = getResource.getAllExamSubjects(examtypeId)
+            except:
+                examtypesubjects = None
+            try:
+                exams = getResource.getAllExams(subjectId)
+            except:
+                exams = None
+            try:
+                questions = getResource.getAllQuestions(examId)
+            except:
+                questions = None
+        response['examtypes'] = allexamstypes
+        response['subjects'] = examtypesubjects
+        response['exams'] = exams
+        response['questions'] = questions
+        response['selections'] = {'examtypeId': examtypeId, 'subjectId': subjectId, 'examId': examId}
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.out.write(json.dumps(response, cls = MyEncoder))
+    
+    def post(self):
+        examId = long(self.request.get('examId'))
+        questionId = long(self.request.get('questionId'))
+        questionText = self.request.get('question')
+        explanation = self.request.get('explanation')
+        questionNumber = int(self.request.get('questionNumber'))
+        try:
+            exam = Exam.get_by_id(examId)
+            objective = exam.objective
+        except:
+            self.response.write('Invalid ExamId')
+            return
+        if objective == True:
+            try:
+                rightOption = int(self.request.get('rightOption'))
+                question = Objective.get_by_id(questionId)
+                options = ast.literal_eval(self.request.get('options'))
+                if question == None:
+                    question = Objective(question = questionText, number = questionNumber, exam = examId, options = options)
+                else:
+                    question.question = questionText
+                    question.number = questionNumber
+                    question.exam = examId
+                    question.options = options
+                if rightOption>= 0 and rightOption < 5:
+                    question.rightoption = rightOption
+                question.explanation = explanation
+                question.put()
+            except:
+                self.response.write('Error Creating Question')
+                return
+        elif objective == False:
+            try:
+                question = Theory.get_by_id(questionId)
+                if question == None:
+                    question = Theory(question = questionText, number = questionNumber, exam = examId)
+                else:
+                    question.question = questionText
+                    question.number = questionNumber
+                    question.exam = examId
+                question.explanation = explanation
+                question.put()
+            except:
+                self.response.write('Error Creating Question')
+                return
+        time.sleep(1) #To prevent request before actual update
+        self.response.write('Successfully Updated')
+            
+class MyEncoder(json.JSONEncoder):
+
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return int(mktime(obj.timetuple()))
+
+        return json.JSONEncoder.default(self, obj)
+        
