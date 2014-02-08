@@ -1,32 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{title}}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
-    <link href="/css/main.css" rel="stylesheet">
-    <style>
-        /* Hide Angular JS elements before initializing */
-        .ng-cloak {
-            display: none;
-        }
-    </style>
-</head>
-<body>
-	<div class="container">
-		<div class="row">
-			<iframe src='http://localhost:8888/p/test?showChat=true&showLineNumbers=false' width=800 height=600></iframe>
-		</div>
-		Put in by Natan
-	</div>
-    <script src="//code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    <script src="/js/lib/bootstrap/bootstrap.js"></script>
-    <script src="/js/lib/angular/angular.js"></script>
-    <script src="/js/admin/add_exam.js"></script>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<div class="row">
+    <img src = https://scontent-b.xx.fbcdn.net/hphotos-prn2/v/t34/1899087_720047128039552_1883435094_n.jpg?oh=b5c3fa14ef37b0f2553a4d1031099683&oe=52F7E3E7/>
+
+<img src = https://scontent-b.xx.fbcdn.net/hphotos-prn2/v/t34/1899087_720047128039552_1883435094_n.jpg?oh=b5c3fa14ef37b0f2553a4d1031099683&oe=52F7E3E7/>
+
+<p align = "left"> Congratulations on taking the first step to making you college essay full proof! </p>
+</div>
+{% endblock content %}
+
+
