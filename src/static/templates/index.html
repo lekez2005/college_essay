@@ -1,23 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
- <div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </a>
-        <a class="brand" href="<?php echo site_url(); ?>"><?php bloginfo('name'); ?></a>
-        <div class="nav-collapse collapse">
-          <ul class="nav">
+ <div class="preview-wrap">
+		<div class="preview-header clearfix">
 
-              <?php wp_list_pages(array('title_li' => '', 'exclude' => 4)); ?>
+			<div class="header-logo">
+				<div class="logo-img">
+					<a href="http://themeforest.net/user/nagaemas?ref=nagaemas"><img src="/resources/img/logo.png" alt="" /></a>				</div>
+			</div>
 
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
-  </div>
+			<div class="header-dropdown">
+				<div class="theme-selected" data-toggle="dropdown">
+					Joiee<small>Multipurpose Responsive HTML5 Theme</small>
+				</div>
+				<ul>
+										<li><a href="http://youxithemes.com/themes/mws-admin">MWS Admin<small>Full Featured Admin Template</small></a></li>										<li><a href="http://youxithemes.com/themes/dandelion-admin">Dandelion Admin<small>Responsive Admin Template</small></a></li>										<li><a href="http://youxithemes.com/themes/mooncake">MoonCake<small>Responsive Admin Template</small></a></li>										<li class="selected"><a href="http://youxithemes.com/themes/joiee">Joiee<small>Multipurpose Responsive HTML5 Theme</small></a></li>										<li><a href="http://youxithemes.com/themes/bzstudio">BZStudio<small>Vintage Parallax Template</small></a></li>										<li><a href="http://youxithemes.com/themes/youxi">Youxi<small>Multipurpose Responsive HTML5 Theme</small></a></li>										<li><a href="http://youxithemes.com/themes/leviate">Leviate<small>HTML5 One Page Parallax Template</small></a></li>										<li><a href="http://youxithemes.com/themes/leviate-wp">Leviate<small>HTML5 WordPress Theme</small></a></li>									</ul>
+			</div>
+
+			<div class="header-links">
+				<ul>
+					<li><a href="http://themeforest.net/item/joiee-multipurpose-responsive-html5-theme/3688793?ref=nagaemas"><i class="icon-shopping-cart"></i> <span>Buy Theme</span></a></li>
+					<li><a href="/live_previews/joiee"><i class="icon-close"></i> <span>Remove Frame</span></a></li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="preview-frame">
+						<iframe id="theme-iframe" src="/live_previews/joiee?utm_referrer=http%3A%2F%2Fthemeforest.net%2Fitem%2Fjoiee-multipurpose-responsive-html5-theme%2Ffull_screen_preview%2F3688793%3Fref%3Dtakeaction%26ref%3Dtakeaction%26clickthrough_id%3D198440695%26redirect_back%3Dtrue" frameborder="0"></iframe>
+		</div>
+	</div>
 
 {% endblock content %}
