@@ -84,4 +84,4 @@ class Upload(blobstore_handlers.BlobstoreUploadHandler):
         if uploaded_file:
             uploaded_file.delete()
             
-        self.redirect('/add/mypads')
+        self.redirect('/mypads')

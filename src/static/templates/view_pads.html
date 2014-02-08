@@ -2,18 +2,54 @@
 
 {% block content %}
 <div class="row clearfix" data-ng-app="addPad">
-		<div class="col-md-6 column" data-ng-controller="addController">
-			{% for pad in pads %}
-                <h4>{{pad.name}}</h4>
-               <div class="row">
-                   <div class="col-md-2"><a class="btn btn-default" href="http://localhost:8888/p/{{pad.pad_id}}">Edit Pad</a> </div>
-               </div>
-                <hr />
-            {% endfor %}
-		</div>
-	</div>
+    <div class="col-md-6 column" data-ng-controller="addController">
+        {% raw %}
+               
+               <div class="row" ng-repeat="pad in pads">
+                   <form class="form-horizontal" role="form" action="/update_pad" method="post" enctype="multipart/form-data">
+                       <div class="form-group">
+                           <label for="padName" class="col-sm-2 control-label">Pad Name</label>
+                           <div class="col-sm-10">
+                               <input type="text" class="form-control" name="padName" ng-model="pad.name" />
+                           </div>
+                       </div>
+                       <div class="col-md-2 col-md-push-2"><a class="btn btn-default" href="http://localhost:8888/p/{{pad.pad_id}}">Edit Pad</a> </div>
+                       <div class="col-md-2 col-md-push-4"><a class="btn btn-default" href="http://localhost:8888/p/{{pad.pad_id}}">Delete Pad</a> </div>
+                       <div class="clearfix"></div>
+                       <h4>Collaborators</h4>
 
-    
+                       <div class="controls">
+                           <ul class="list-group" id="colaBList">
+                               <li class="list-group-item" ng-repeat="colab in pad.editors">{{colab}}
+		            	          [<a href ng-click="(pad.editors).splice($index, 1)">X</a>]
+                               </li>
+                               <li class="list-group-item">
+                                   <input ng-model="new_colab" class="text" placeholder="Add Email">
+                                   [<a href ng-click="(pad.editors).push(new_colab)">add</a>]
+                               </li>
+                           </ul>
+                       </div>
+                       <textarea class="hidden" name="editors">{{pad.editors}}</textarea>
+                       <textarea class="hidden" name="padId">{{pad.pad_id}}</textarea>
+                       <div class="row">
+                           <div class="col-sm-2 col-sm-push-10">
+                               <button type="submit" class="btn btn-default btn-block">Update</button></div>
+                       </div>
+                   </form>
+                   <hr />
+               </div>
+
+    </div>
+    {% endraw %}
+</div>
+<script type="text/javascript">
+    var pads = [];
+    {% for pad in pads %}
+    pads.push({{pad|ndb_json}});
+    {% endfor %}
+</script>
+
+
 {% endblock content %}
 
 {% block scripts %}
