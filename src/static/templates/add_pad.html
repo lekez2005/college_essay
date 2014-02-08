@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row clearfix" data-ng-app="addPad">
+		<div class="col-md-6 column" data-ng-controller="addController">
+			<form class="form-horizontal" role="form" action="{{post_url}}" method="post" enctype="multipart/form-data">
+				<div class="form-group">
+					 <label for="padName" class="col-sm-2 control-label">Pad Name</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="padName" />
+					</div>
+				</div>
+				<div class="form-group">
+					 <label for="inputPassword3" class="col-sm-2 control-label">Pad Content</label>
+					<div class="col-sm-10">
+						<input type="radio" data-ng-model="createForm" name="create_from" value="upload"> Upload<br>
+                        <input type="radio" data-ng-model="createForm" name="create_from" value="textarea"> Enter Text<br>
+					</div>
+				</div>
+                <div class="form-group" data-ng-show="createForm==='textarea'">
+					 <label for="padText" class="col-sm-2 control-label">Enter Pad Text</label>
+					<div class="col-sm-10">
+						<textarea name="pad_text" class="form-control" rows="3">
+			              	
+			              </textarea>
+					</div>
+				</div>
+                <div class="form-group" data-ng-show="createForm==='upload'">
+					 <label class="col-sm-2 control-label">Select File</label>
+					<div class="col-sm-10">
+						<input type="file" name="file" class="form-control" />
+					</div>
+				</div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-sm-2 col-sm-push-10"><button type="submit" class="btn btn-default btn-block">Upload</button></div>
+                </div>
+                
+			</form>
+		</div>
+	</div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="/js/add_pad.js"></script>
+{% endblock scripts %}

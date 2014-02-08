@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row clearfix" data-ng-app="addPad">
+		<div class="col-md-6 column" data-ng-controller="addController">
+			{% for pad in pads %}
+                <h4>{{pad.name}}</h4>
+               <div class="row">
+                   <div class="col-md-2"><a class="btn btn-default" href="http://localhost:8888/p/{{pad.pad_id}}">Edit Pad</a> </div>
+               </div>
+                <hr />
+            {% endfor %}
+		</div>
+	</div>
+
+    
+{% endblock content %}
+
+{% block scripts %}
+<script src="/js/view_pads.js"></script>
+{% endblock scripts %}
