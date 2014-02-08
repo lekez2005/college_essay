@@ -28,5 +28,29 @@
 						<iframe id="theme-iframe" src="/live_previews/joiee?utm_referrer=http%3A%2F%2Fthemeforest.net%2Fitem%2Fjoiee-multipurpose-responsive-html5-theme%2Ffull_screen_preview%2F3688793%3Fref%3Dtakeaction%26ref%3Dtakeaction%26clickthrough_id%3D198440695%26redirect_back%3Dtrue" frameborder="0"></iframe>
 		</div>
 	</div>
+	<script>
+	$( document ).ready(function() {
+		$( '#theme-iframe' ).load(function() {
+			var iframe = $( this )[0], bodyIframe;
+			if( iframe.contentWindow && iframe.contentWindow.document.body ) {
+				bodyIframe = iframe.contentWindow.document.body;
+			} else if( iframe.document && iframe.document.body ) {
+				bodyIframe = iframe.document.body;
+			} else if( iframe.contentDocument && iframe.contentDocument.body ) {
+				bodyIframe = iframe.contentDocument.body;
+			}
+
+			if( bodyIframe ) {
+
+				var ga = document.createElement('script');
+				ga.type = 'text/javascript';
+				ga.async = true;
+				ga.src = 'http://youxithemes.com/resources/js/ga.js';
+				bodyIframe.appendChild( ga );
+
+			}
+		});
+	});
+</script>
 
 {% endblock content %}
